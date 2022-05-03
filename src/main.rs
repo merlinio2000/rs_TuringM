@@ -38,7 +38,7 @@ enum State {
 impl State {
     fn is_accept(&self) -> bool {
         match self {
-            State::Q(num) => num == &2,
+            State::Q(num) => *num == 2,
             State::GARBAGE => false,
         }
     }
@@ -57,6 +57,7 @@ struct TuringM<'a> {
     state: QState,
     transitions: &'a HashMap<TransitionKey, TransitionStep>,
 }
+
 impl TuringM<'_> {
     fn step(&mut self) -> bool {
         match self.transitions.get(&(self.state, self.tape[self.ptr])) {
