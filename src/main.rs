@@ -123,20 +123,25 @@ fn parse_transition(trans_str: &str) -> TransitionTuple {
     }
 }
 
-fn parse_tape(tape_str: &str) -> VecDeque<Symbol> {
+fn parse_tape(tape_str: String) -> VecDeque<Symbol> {
     tape_str.chars().map(|c| (c.to_digit(10).unwrap() as usize) + 1).collect()
 }
 
 fn main() {
     
-    /*
+    
     let args: Vec<String> = std::env::args().collect();
-    if args.len() != 1 {
-        panic!("Invalid number of arguments");
+    
+    let mut tape_str = String::from("00010000");
+    let mut do_step = false;
+
+    if args.len() >= 2 {
+        tape_str = args[1].clone();
+        match args.get(2) {
+            Some(argument) => do_step = argument == "step",
+            None => println!("not enabling step mode"),
+        }
     }
-    let tape_str = &args[0];
-    */
-    let tape_str = "00010000";
 
     let tm_str = "01010100001001101000001010000100110100100010010011000100100010010011000101000010010110000100100001001011000001000010000010000101100001000010000010000010110000010100000101011000001000100000010100110000001000010000001000010011000000100000100001000001011000000101000000101001100001010000101001100000001001000000010001011000000010000100000001000101100000001010010100110001000100000001000101100001000001010000100";
 
@@ -159,7 +164,18 @@ fn main() {
     println!("{:?}", transition_map);
 
 
-    while machine.step() {}
-    println!("Machine ended in State {} after {} steps, acccepting={}", machine.state, machine.step_cnt, machine.state == 2);
+    let mut stdin = String::new();
+    while machine.step() {
+        if do_step {
+            println!("Continue?");
+            std::io::stdin().read_line(&mut stdin);
+
+            if stdin.to_uppercase() == "NO" {
+                break;
+            }
+        }
+    }
+    println!("Machine ended in State {} after {} steps, acccepting={}",
+                            machine.state, machine.step_cnt, machine.state == 2);
     println!("Tape: {:?}", machine.tape);
 }
