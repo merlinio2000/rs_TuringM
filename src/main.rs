@@ -70,6 +70,7 @@ struct TuringM<'a> {
     ptr: usize,
     state: QState,
     transitions: &'a HashMap<TransitionKey, TransitionStep>,
+    step_cnt: usize
 }
 
 impl TuringM<'_> {
@@ -96,6 +97,7 @@ impl TuringM<'_> {
                 } else {
                     self.ptr = new_idx as usize;
                 }
+                self.step_cnt += 1;
                 true
             }
             None => {
@@ -132,13 +134,11 @@ fn main() {
     if args.len() != 1 {
         panic!("Invalid number of arguments");
     }
-    let tm_str = &args[0];
+    let tape_str = &args[0];
     */
-    let tape_str = "0001000";
+    let tape_str = "00010000";
 
     let tm_str = "01010100001001101000001010000100110100100010010011000100100010010011000101000010010110000100100001001011000001000010000010000101100001000010000010000010110000010100000101011000001000100000010100110000001000010000001000010011000000100000100001000001011000000101000000101001100001010000101001100000001001000000010001011000000010000100000001000101100000001010010100110001000100000001000101100001000001010000100";
-
-    //let transitions: Vec<Transition> = tm_str.split(TRANS_SEPARATOR).map(|trans_str| trans_str.into()).collect();
 
     let transition_map: HashMap<TransitionKey, TransitionStep> = tm_str
         .split(TRANS_SEPARATOR)
@@ -149,7 +149,8 @@ fn main() {
         tape: parse_tape(tape_str),
         ptr: 0,
         state: 1,
-        transitions: &transition_map
+        transitions: &transition_map,
+        step_cnt: 0
     };
 
 
@@ -159,6 +160,6 @@ fn main() {
 
 
     while machine.step() {}
-    println!("Machine ended in State {}", machine.state);
+    println!("Machine ended in State {} after {} steps, acccepting={}", machine.state, machine.step_cnt, machine.state == 2);
     println!("Tape: {:?}", machine.tape);
 }
