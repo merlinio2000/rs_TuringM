@@ -40,21 +40,6 @@ impl fmt::Display for MoveDir {
     }
 }
 
-#[derive(Debug)]
-enum State {
-    Q(usize),
-    GARBAGE,
-}
-
-impl State {
-    fn is_accept(&self) -> bool {
-        match self {
-            State::Q(num) => *num == 2,
-            State::GARBAGE => false,
-        }
-    }
-}
-
 type QState = usize;
 type Symbol = usize;
 type TransitionKey = (QState, Symbol);
