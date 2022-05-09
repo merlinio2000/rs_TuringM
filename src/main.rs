@@ -120,13 +120,15 @@ fn main() {
     let mut tape_str = String::from("00010000");
     let mut do_step = false;
 
-    if args.len() >= 2 {
-        tape_str = args[1].clone();
-        match args.get(2) {
-            Some(argument) => do_step = argument == "step",
-            None => println!("not enabling step mode"),
-        }
+    match args.get(1) {
+        Some(arg) => tape_str = arg.clone(),
+        None => println!("Defaulting Tape to {}", tape_str)
     }
+    match args.get(2) {
+            Some(arg) => do_step = arg == "step",
+            None => println!("not enabling step mode")
+    }
+    
 
     let tm_str = "01010100001001101000001010000100110100100010010011000100100010010011000101000010010110000100100001001011000001000010000010000101100001000010000010000010110000010100000101011000001000100000010100110000001000010000001000010011000000100000100001000001011000000101000000101001100001010000101001100000001001000000010001011000000010000100000001000101100000001010010100110001000100000001000101100001000001010000100";
 
